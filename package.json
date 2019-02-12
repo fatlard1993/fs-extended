@@ -1,0 +1,26 @@
+{
+  "name": "fs-extended",
+  "version": "1.0.0",
+  "description": "A node.js fs extension which provides some handy top-level functionality",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fatlard1993/fs-extended.git"
+  },
+  "author": "fatlard1993",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fatlard1993/fs-extended/issues"
+  },
+  "homepage": "https://github.com/fatlard1993/fs-extended#readme",
+  "devDependencies": {
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.13.0"
+  },
+  "dependencies": {
+    "log": "github:fatlard1993/log"
+  }
+}
