@@ -5,6 +5,66 @@ const crypto = require('crypto');
 const log = require('log');
 
 const fsExtended = module.exports = {
+	touch: function(file){
+		fs.closeSync(fs.openSync(file, 'w'));
+	},
+	move: function(oldPath, newPath, cb){
+		fs.rename(oldPath, newPath, function(err){
+			if(err){
+				if(err.code === 'EXDEV') fsExtended.copy(oldPath, newPath, cb);
+
+				else cb(err);
+
+				return;
+			}
+
+			cb();
+		});
+	},
+	copy: function(oldPath, newPath, cb){
+		var readStream = fs.createReadStream(oldPath);
+		var writeStream = fs.createWriteStream(newPath);
+
+		readStream.on('error', cb);
+		writeStream.on('error', cb);
+
+		readStream.on('close', function(){
+			fs.unlink(oldPath, cb);
+		});
+
+		readStream.pipe(writeStream);
+	},
+	copySync: function(source, target){
+		Log.info()('copy', source, target);
+
+		if(fs.existsSync(target) && fs.lstatSync(target).isDirectory()) target = Path.join(target, Path.basename(source));
+
+		fs.writeFileSync(target, fs.readFileSync(source));
+	},
+	copyRecursiveSync: function(source, target){
+		target = Path.join(target, Path.basename(source));
+
+		if(!fs.existsSync(target)) fs.mkdirSync(target);
+
+		if(fs.lstatSync(source).isDirectory()){
+			fs.readdirSync(source).forEach(function(file){
+				var curSource = Path.join(source, file);
+
+				if(fs.lstatSync(curSource).isDirectory()) fsExtended.copyRecursiveSync(curSource, target);
+
+				else fsExtended.copySync(curSource, target);
+			});
+		}
+	},
+	copyRecursivePattern: function(source, target, pattern){
+		fs.readdirSync(Path.resolve(source)).forEach(function(fileName){
+			if(!pattern.test(fileName)) return;
+
+			var resolvedPath = Path.resolve(source, fileName);
+
+			fsExtended['copy'+ (fs.lstatSync(resolvedPath).isDirectory() ? 'RecursivePattern' : 'Sync')](resolvedPath, target, pattern);
+		});
+	},
 	rm: function(filePath){
 		log(1)(`Removing file: ${filePath}`);
 
@@ -17,16 +77,12 @@ const fsExtended = module.exports = {
 		}
 	},
 	rmPattern: function(rootPath, pattern){
-		fs.readdir(path.resolve(rootPath), function(err, fileNames){
-			if(err) log.error(err);
+		fs.readdirSync(Path.resolve(source)).forEach(function(fileName){
+			if(!pattern.test(fileName)) return;
 
-			for(var name of fileNames){
-				if(pattern.test(name)){
-					var resolvedPath = path.resolve(rootPath, name);
+			var resolvedPath = Path.resolve(source, fileName);
 
-					fsExtended['rm'+ (fs.lstatSync(resolvedPath).isDirectory() ? 'dir' : '')](resolvedPath);
-				}
-			}
+			System.fs['rm'+ (fs.lstatSync(resolvedPath).isDirectory() ? 'dir' : '')](resolvedPath);
 		});
 	},
 	rmdir: function(dir){
