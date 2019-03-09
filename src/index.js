@@ -35,20 +35,20 @@ const fsExtended = module.exports = {
 		readStream.pipe(writeStream);
 	},
 	copySync: function(source, target){
-		Log.info()('copy', source, target);
+		log.info('copy', source, target);
 
-		if(fs.existsSync(target) && fs.lstatSync(target).isDirectory()) target = Path.join(target, Path.basename(source));
+		if(fs.existsSync(target) && fs.lstatSync(target).isDirectory()) target = path.join(target, path.basename(source));
 
 		fs.writeFileSync(target, fs.readFileSync(source));
 	},
 	copyRecursiveSync: function(source, target){
-		target = Path.join(target, Path.basename(source));
+		target = path.join(target, path.basename(source));
 
 		if(!fs.existsSync(target)) fs.mkdirSync(target);
 
 		if(fs.lstatSync(source).isDirectory()){
 			fs.readdirSync(source).forEach(function(file){
-				var curSource = Path.join(source, file);
+				var curSource = path.join(source, file);
 
 				if(fs.lstatSync(curSource).isDirectory()) fsExtended.copyRecursiveSync(curSource, target);
 
@@ -57,10 +57,10 @@ const fsExtended = module.exports = {
 		}
 	},
 	copyRecursivePattern: function(source, target, pattern){
-		fs.readdirSync(Path.resolve(source)).forEach(function(fileName){
+		fs.readdirSync(path.resolve(source)).forEach(function(fileName){
 			if(!pattern.test(fileName)) return;
 
-			var resolvedPath = Path.resolve(source, fileName);
+			var resolvedPath = path.resolve(source, fileName);
 
 			fsExtended['copy'+ (fs.lstatSync(resolvedPath).isDirectory() ? 'RecursivePattern' : 'Sync')](resolvedPath, target, pattern);
 		});
@@ -77,12 +77,12 @@ const fsExtended = module.exports = {
 		}
 	},
 	rmPattern: function(rootPath, pattern){
-		fs.readdirSync(Path.resolve(source)).forEach(function(fileName){
+		fs.readdirSync(path.resolve(rootPath)).forEach(function(fileName){
 			if(!pattern.test(fileName)) return;
 
-			var resolvedPath = Path.resolve(source, fileName);
+			var resolvedPath = path.resolve(rootPath, fileName);
 
-			System.fs['rm'+ (fs.lstatSync(resolvedPath).isDirectory() ? 'dir' : '')](resolvedPath);
+			fsExtended['rm'+ (fs.lstatSync(resolvedPath).isDirectory() ? 'dir' : '')](resolvedPath);
 		});
 	},
 	rmdir: function(dir){
