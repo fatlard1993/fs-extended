@@ -35,7 +35,7 @@ const fsExtended = module.exports = {
 		readStream.pipe(writeStream);
 	},
 	copySync: function(source, target){
-		log.info('copy', source, target);
+		log.info(1)('copy', source, target);
 
 		if(fs.existsSync(target) && fs.lstatSync(target).isDirectory()) target = path.join(target, path.basename(source));
 
