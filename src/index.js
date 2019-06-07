@@ -6,7 +6,7 @@ const log = require('log');
 
 const fsExtended = module.exports = {
 	touch: function(file){
-		fs.closeSync(fs.openSync(file, 'w'));
+		fs.closeSync(fs.openSync(file, fs.existsSync(file) ? 'a' : 'w'));
 	},
 	move: function(oldPath, newPath, cb){
 		fs.rename(oldPath, newPath, function(err){
