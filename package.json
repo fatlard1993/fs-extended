@@ -1,6 +1,6 @@
 {
 	"name": "fs-extended",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "A node.js fs extension which provides some handy top-level functionality",
 	"main": "src/index.js",
 	"scripts": {
