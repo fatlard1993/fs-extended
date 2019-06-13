@@ -150,6 +150,8 @@ const fsExtended = module.exports = {
 		var output = { folders: [], files: [] };
 
 		fs.readdir(dir, function(err, files){
+			if(err) return cb(output);
+
 			for(var x = 0, count = files.length; x < count; ++x){
 				files[x] = path.join(dir, files[x]);
 
