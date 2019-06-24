@@ -103,7 +103,7 @@ const fsExtended = module.exports = {
 	mkdir: function(dir){
 		if(!dir) return;
 
-		log(1)(`[fs-extended] Creating directory: ${dir}`);
+		log(4)(`[fs-extended] Creating directory: ${dir}`);
 
 		for(var x = dir.length - 2; x >= 0; --x){
 			if(dir.charAt(x) === '/' || dir.charAt(x) === path.sep){
@@ -118,7 +118,7 @@ const fsExtended = module.exports = {
 		catch(err){
 			if(err.code !== 'EEXIST') return log.error()(dir, err);
 
-			log.warn(1)(`[fs-extended] Can't make ${dir}, already exists`);
+			log.warn(4)(`[fs-extended] Can't make ${dir}, already exists`);
 		}
 	},
 	cat: function(filePath, cb){
