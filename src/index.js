@@ -8,7 +8,7 @@ const fsExtended = module.exports = {
 	touch: function(file){
 		fs.closeSync(fs.openSync(file, fs.existsSync(file) ? 'a' : 'w'));
 	},
-	move: function(oldPath, newPath, cb){
+	move: function(oldPath, newPath, cb = log){
 		fs.rename(oldPath, newPath, function(err){
 			if(err){
 				if(err.code === 'EXDEV') fsExtended.copy(oldPath, newPath, cb);
