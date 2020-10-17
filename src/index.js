@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 
-const log = require('log');
+const log = new (require('log'))({ tag: 'fs-extended' });
 
 const fsExtended = module.exports = {
 	touch: function(file){
@@ -35,7 +35,7 @@ const fsExtended = module.exports = {
 		readStream.pipe(writeStream);
 	},
 	copySync: function(source, target){
-		log.info(1)('[fs-extended] copy', source, target);
+		log.info(1)('copy', source, target);
 
 		if(fs.existsSync(target) && fs.lstatSync(target).isDirectory()) target = path.join(target, path.basename(source));
 
@@ -66,14 +66,14 @@ const fsExtended = module.exports = {
 		});
 	},
 	rm: function(filePath){
-		log(1)(`[fs-extended] Removing file: ${filePath}`);
+		log(1)(`Removing file: ${filePath}`);
 
 		try{ fs.unlinkSync(filePath); }
 
 		catch(err){
 			if(err.code !== 'ENOENT') return log.error(err);
 
-			log.warn(1)(`[fs-extended] Can't remove ${filePath}, doesn't exist`);
+			log.warn(1)(`Can't remove ${filePath}, doesn't exist`);
 		}
 	},
 	rmPattern: function(rootPath, pattern){
@@ -88,7 +88,7 @@ const fsExtended = module.exports = {
 	rmdir: function(dir){
 		if(!fs.existsSync(dir)) return;
 
-		log(1)(`[fs-extended] Removing directory: ${dir}`);
+		log(1)(`Removing directory: ${dir}`);
 
 		fs.readdirSync(dir).forEach(function(file){
 			var curPath = dir +'/'+ file;
@@ -103,7 +103,7 @@ const fsExtended = module.exports = {
 	mkdir: function(dir){
 		if(!dir) return;
 
-		log(4)(`[fs-extended] Creating directory: ${dir}`);
+		log(4)(`Creating directory: ${dir}`);
 
 		for(var x = dir.length - 2; x >= 0; --x){
 			if(dir.charAt(x) === '/' || dir.charAt(x) === path.sep){
@@ -118,12 +118,12 @@ const fsExtended = module.exports = {
 		catch(err){
 			if(err.code !== 'EEXIST') return log.error()(dir, err);
 
-			log.warn(4)(`[fs-extended] Can't make ${dir}, already exists`);
+			log.warn(4)(`Can't make ${dir}, already exists`);
 		}
 	},
 	cat: function(filePath, cb){
 		fs.readFile(filePath, 'utf8', function(err, data){
-			if(err) log.error('[fs-extended] cat', err);
+			if(err) log.error('cat', err);
 
 			cb(data || '');
 		});
@@ -136,7 +136,7 @@ const fsExtended = module.exports = {
 		catch(err){
 			if(err.code !== 'ENOENT') return log.error(err);
 
-			log.warn(1)(`[fs-extended] Can't read ${filePath}, doesn't exist`);
+			log.warn(1)(`Can't read ${filePath}, doesn't exist`);
 
 			fileData = '';
 		}
@@ -168,7 +168,7 @@ const fsExtended = module.exports = {
 		hash.setEncoding('hex');
 
 		fileData.on('error', function(err){
-			log.error('[fs-extended] ERR getFileHash ERR', err);
+			log.error('ERR getFileHash ERR', err);
 
 			hash.end();
 
