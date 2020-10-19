@@ -161,6 +161,34 @@ const fsExtended = module.exports = {
 			cb(output);
 		});
 	},
+	getChildFolders: function getChildFolders(parentFolder, opts = {}){
+		try{
+			return fs.readdirSync(parentFolder).filter((folder) => {
+				const location = path.join(parentFolder, folder);
+				const stats = fs.lstatSync(location);
+				let isDir;
+
+				if(!opts.ignoreSymlinks && stats.isSymbolicLink()){
+					try{
+						isDir = fs.readdirSync(location).length;
+					}
+					catch(err){
+						log(3)(err);
+
+						return false;
+					}
+				}
+
+				else isDir = stats.isDirectory() && (typeof opts.blacklist !== 'object' || !opts.blacklist[folder]);
+
+				return isDir;
+			});
+		}
+
+		catch(e){
+			return [];
+		}
+	},
 	getFileHash: function(src, done){
 		var fileData = fs.createReadStream(src);
 		var hash = crypto.createHash('sha1');
