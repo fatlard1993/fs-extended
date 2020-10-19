@@ -113,8 +113,11 @@ const fsExtended = module.exports = {
 			}
 		}
 
-		try{ fs.mkdirSync(dir); }
+		try{
+			fs.mkdirSync(dir);
 
+			log()(`Created directory: ${dir}`);
+		}
 		catch(err){
 			if(err.code !== 'EEXIST') return log.error()(dir, err);
 
@@ -196,7 +199,7 @@ const fsExtended = module.exports = {
 		hash.setEncoding('hex');
 
 		fileData.on('error', function(err){
-			log.error('ERR getFileHash ERR', err);
+			log.error('getFileHash', err);
 
 			hash.end();
 
