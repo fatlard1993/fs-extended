@@ -164,7 +164,7 @@ const fsExtended = module.exports = {
 			cb(output);
 		});
 	},
-	getChildFolders: function getChildFolders(parentFolder, opts = {}){
+	getChildFolders: function getChildFolders(parentFolder, opts = { blacklist: {}, ignoreSymlinks: false }){
 		try{
 			return fs.readdirSync(parentFolder).filter((folder) => {
 				const location = path.join(parentFolder, folder);
