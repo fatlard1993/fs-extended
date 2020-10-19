@@ -56,6 +56,9 @@ const fsExtended = module.exports = {
 			});
 		}
 	},
+	findFiles: function(parentFolder, pattern){
+		return fs.readdirSync(path.resolve(parentFolder)).filter((fileName) => { return pattern.test(fileName); });
+	},
 	copyRecursivePattern: function(source, target, pattern){
 		fs.readdirSync(path.resolve(source)).forEach(function(fileName){
 			if(!pattern.test(fileName)) return;
