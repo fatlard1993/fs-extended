@@ -171,7 +171,9 @@ const fsExtended = module.exports = {
 				const stats = fs.lstatSync(location);
 				let isDir;
 
-				if(!opts.ignoreSymlinks && stats.isSymbolicLink()){
+				if(typeof opts.blacklist === 'object' && opts.blacklist[folder]) isDir = false;
+
+				else if(!opts.ignoreSymlinks && stats.isSymbolicLink()){
 					try{
 						isDir = fs.readdirSync(location).length;
 					}
@@ -182,7 +184,7 @@ const fsExtended = module.exports = {
 					}
 				}
 
-				else isDir = stats.isDirectory() && (typeof opts.blacklist !== 'object' || !opts.blacklist[folder]);
+				else isDir = stats.isDirectory();
 
 				return isDir;
 			});
